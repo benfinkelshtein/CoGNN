@@ -1,0 +1,23 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+#log files
+*.log
+tb_logs/
+lightning_logs/
+wandb/
+
+#Keops related generate files
+CMakeCache.txt
+CMakeFiles/
+build-libKeOps*
+
+#Do not add jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+#other
+datasets/*/processed/*
