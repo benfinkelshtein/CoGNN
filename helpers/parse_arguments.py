@@ -8,20 +8,31 @@ from helpers.encoders import PosEncoder
 
 def parse_arguments():
     parser = ArgumentParser()
-    parser.add_argument("--dataset", dest="dataset", default=DataSet.roman_empire, type=DataSet.from_string,
+    parser.add_argument("--dataset", dest="dataset", default=DataSet.amazon_ratings, type=DataSet.from_string,
                         choices=list(DataSet), required=False)
     parser.add_argument("--pool", dest="pool", default=Pool.NONE, type=Pool.from_string,
                         choices=list(Pool), required=False)
+    
+    # eigen dimension:  <lambda>() missing 16 required positional arguments: 'treshold', 'model_type', 'num_layers', 'env_dim', 
+    #'layer_norm', 'skip', 'batch_norm', 'dropout', 'act_type', 'dec_num_layers', 'pos_enc', 'dataset_encoders', 'metric_type',
+    # 'in_dim', 'out_dim', and 'gin_mlp_func'
 
+    # eigen model
+    parser.add_argument("--eigen_dim", dest="eigen_dim", default=2, action='store_true', required=False)
+    parser.add_argument("--eigen_model_type", dest="eigen_model_type", default=ModelType.SEDenseConv,
+                        type=ModelType.from_string, choices=list(ModelType), required=False)
+
+    #parser.add_argument("--dense", dest="dense", default=True, action='store_true', required=False)
+    #parser.add_argument("--treshold", dest="treshold", default=0.1, action='store_true', required=False)
     # gumbel
-    parser.add_argument("--learn_temp", dest="learn_temp", default=False, action='store_true', required=False)
+    parser.add_argument("--learn_temp", dest="learn_temp", default=False, required=False)
     parser.add_argument("--temp_model_type", dest="temp_model_type", default=ModelType.LIN,
                         type=ModelType.from_string, choices=list(ModelType), required=False)
     parser.add_argument("--tau0", dest="tau0", default=0.5, type=float, required=False)
     parser.add_argument("--temp", dest="temp", default=0.01, type=float, required=False)
 
     # optimization
-    parser.add_argument("--max_epochs", dest="max_epochs", default=3000, type=int, required=False)
+    parser.add_argument("--max_epochs", dest="max_epochs", default=5, type=int, required=False)
     parser.add_argument("--batch_size", dest="batch_size", default=32, type=int, required=False)
     parser.add_argument("--lr", dest="lr", default=1e-3, type=float, required=False)
     parser.add_argument("--dropout", dest="dropout", default=0.2, type=float, required=False)

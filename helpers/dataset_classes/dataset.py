@@ -20,6 +20,7 @@ from helpers.classes import ActivationType, Pool, ModelType
 from helpers.encoders import DataSetEncoders, PosEncoder
 from lrgb.cosine_scheduler import cosine_with_warmup_scheduler
 from lrgb.transforms import apply_transform
+from utils.transforms import AddSpectra, GetFirstEigen
 
 
 class DatasetBySplit(NamedTuple):
@@ -135,7 +136,13 @@ class DataSet(Enum):
         root = osp.join(ROOT_DIR, 'datasets')
         if self.get_family() is DataSetFamily.heterophilic:
             name = self.name.replace('_', '-').capitalize()
-            dataset = [HeterophilousGraphDataset(root=root, name=name, transform=T.ToUndirected())[0]]
+            transform =  T.Compose([T.ToUndirected(), AddSpectra(), GetFirstEigen(100)])
+            #dataset = [torch.load(root+"/amazon_ratings/processed/data.pt")[0]]
+            #torch.save(dataset, root+"/amazon_ratings/processed/data_transormed.pt")
+            #dataset = [HeterophilousGraphDataset(root=root, name=name, transform=transform)[0]]
+            dataset = torch.load( root+"/amazon_ratings/processed/data_transormed.pt")
+
+
         elif self.get_family() in [DataSetFamily.social_networks, DataSetFamily.proteins]:
             tu_dataset_name = self.name.upper().replace('_', '-')
             root = osp.join(ROOT_DIR, 'datasets', tu_dataset_name)

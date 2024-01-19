@@ -25,7 +25,7 @@ class Experiment(object):
         
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         set_seed(seed=self.seed)
-
+        print(self.device)
         # parameters
         self.metric_type = self.dataset.get_metric_type()
         self.decimal = self.dataset.num_after_decimal()

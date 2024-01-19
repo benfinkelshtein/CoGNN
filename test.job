@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH -N 1      # nodes requested
+#SBATCH --job-name=coop_roman_epire
+#SBATCH --output=test.out
+#SBATCH --error=test.err
+#SBATCH --mem=36000
+#SBATCH --qos=short
+#SBATCH --gres=gpu:1
+# the -u option means 'unbuffered',
+# which should continuously write output to the .out file
+
+/slurm-storage/miniconda3/envs/GGNN-envs/bin/python -u main.py --dataset roman_empire --env_model_type MEAN_GNN --act_model_type MEAN_GNN --env_dim 64 --env_num_layers 3 --act_dim 16 --act_num_layers 1 --seed 0
+
