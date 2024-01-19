@@ -1,7 +1,0 @@
-/slurm-storage/miniconda3/envs/GGNN-envs/lib/python3.9/site-packages/torch_geometric/graphgym/config.py:19: UserWarning: Could not define global config object. Please install 'yacs' via 'pip install yacs' in order to use GraphGym
-  warnings.warn("Could not define global config object. Please install "
-/slurm-storage/miniconda3/envs/GGNN-envs/lib/python3.9/site-packages/torch_geometric/graphgym/imports.py:14: UserWarning: Please install 'pytorch_lightning' via  'pip install pytorch_lightning' in order to use GraphGym
-  warnings.warn("Please install 'pytorch_lightning' via  "
-slurmstepd: error: _cgroup_procs_check: failed on path (null)/cgroup.procs: No such file or directory
-slurmstepd: error: Cannot write to cgroup.procs for (null)
-slurmstepd: error: Unable to move pid 47694 to init root cgroup (null)

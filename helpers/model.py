@@ -2,7 +2,7 @@ from enum import Enum, auto
 from torch.nn import Module
 from typing import List, Callable
 
-from models.layers import SEDenseConv, SETresholdedConv, WeightedGCNConv, WeightedGINConv, WeightedGNNConv, GraphLinear
+from models.layers import WeightedGCNConv, WeightedGINConv, WeightedGNNConv, GraphLinear
 
 
 class ModelType(Enum):
@@ -15,9 +15,6 @@ class ModelType(Enum):
 
     SUM_GNN = auto()
     MEAN_GNN = auto()
-
-    SETresholdedConv = auto ()
-    SEDenseConv = auto ()
 
     @staticmethod
     def from_string(s: str):
@@ -35,10 +32,6 @@ class ModelType(Enum):
             return WeightedGNNConv
         elif self is ModelType.LIN:
             return GraphLinear
-        elif self is ModelType.SETresholdedConv:
-            return SETresholdedConv
-        elif self is ModelType.SEDenseConv:
-            return SEDenseConv
         else:
             raise ValueError(f'model {self.name} not supported')
 
@@ -46,7 +39,7 @@ class ModelType(Enum):
         return self is ModelType.GCN
 
     def get_component_list(self, in_dim: int, hidden_dim: int, out_dim: int, num_layers: int, bias: bool,
-                           edges_required: bool, gin_mlp_func: Callable, eigen_dim = 2) -> List[Module]:
+                           edges_required: bool, gin_mlp_func: Callable) -> List[Module]:
         dim_list = [in_dim] + [hidden_dim] * (num_layers - 1) + [out_dim]
         if self is ModelType.GCN:
             component_list = [self.load_component_cls()(in_channels=in_dim_i, out_channels=out_dim_i, bias=bias)
@@ -65,16 +58,6 @@ class ModelType(Enum):
             component_list = \
                 [self.load_component_cls()(in_features=in_dim_i, out_features=out_dim_i, bias=bias)
                  for in_dim_i, out_dim_i in zip(dim_list[:-1], dim_list[1:])]
-        elif self is ModelType.SETresholdedConv:
-            aggr = 'sum'
-            component_list = [self.load_component_cls()(in_channels=in_dim_i, out_channels=out_dim_i, aggr=aggr,
-                                                        bias=bias)
-                              for in_dim_i, out_dim_i in zip(dim_list[:-1], dim_list[1:])]     
-        elif self is ModelType.SEDenseConv:
-            aggr = 'sum'
-            component_list = [self.load_component_cls()(in_channels=in_dim_i, out_channels=out_dim_i,
-                                                        bias=bias, eigen_dim = eigen_dim)
-                              for in_dim_i, out_dim_i in zip(dim_list[:-1], dim_list[1:])]
         else:
             raise ValueError(f'model {self.name} not supported')
         return component_list
