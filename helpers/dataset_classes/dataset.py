@@ -63,6 +63,7 @@ class DataSet(Enum):
     imdb_binary = auto()
     imdb_multi = auto()
     reddit_binary = auto()
+    reddit_multi = auto()
     
     # proteins
     enzymes = auto()
@@ -74,6 +75,7 @@ class DataSet(Enum):
 
     # homophilic
     cora = auto()
+    pubmed = auto()
 
     @staticmethod
     def from_string(s: str):
@@ -88,13 +90,13 @@ class DataSet(Enum):
             return DataSetFamily.heterophilic
         elif self in [DataSet.root_neighbours, DataSet.cycles]:
             return DataSetFamily.synthetic
-        elif self in [DataSet.imdb_binary, DataSet.imdb_multi, DataSet.reddit_binary]:
+        elif self in [DataSet.imdb_binary, DataSet.imdb_multi, DataSet.reddit_binary, DataSet.reddit_multi]:
             return DataSetFamily.social_networks
         elif self in [DataSet.enzymes, DataSet.proteins, DataSet.nci1]:
             return DataSetFamily.proteins
         elif self is DataSet.func:
             return DataSetFamily.lrgb
-        elif self is DataSet.cora:
+        elif self in [DataSet.cora, DataSet.pubmed]:
             return DataSetFamily.homophilic
         else:
             raise ValueError(f'DataSet {self.name} not supported in dataloader')
