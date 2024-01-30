@@ -29,6 +29,11 @@ Available in Pytorch Geometric.
 
 The TUDatasets and Social network graph classification datasets can be found at ``datasets/``.
 
+Make sure to unzip the REDDIT-MULTI-5K.zip first!
+```
+unzip datasets\REDDIT-MULTI-5K.zip
+```
+
 ### LRGB
 
 The Peptides-func dataset can be found at ``datasets/peptides-functional``.
