@@ -19,7 +19,11 @@ def get_virtualnode_mlp(emb_dim: int) -> Module:
 
 
 class MolConv(MessagePassing):
+    def __init__(self, aggr='add'):
+        super().__init__(aggr=aggr)  # 'add', 'mean' or 'max'
+
     def message(self, x_j: Tensor, edge_attr: OptTensor, edge_weight: OptTensor = None) -> Tensor:
+
         if edge_attr is None:
             if edge_weight is None:
                 return x_j
@@ -31,7 +35,8 @@ class MolConv(MessagePassing):
             else:
                 return edge_weight.view(-1, 1) * (x_j + edge_attr)
 
-    def update(self, aggr_out):
+    def update(self, aggr_out: Tensor) -> Tensor:
+
         return aggr_out
 
 
@@ -79,17 +84,14 @@ class WeightedGINConv(MolConv):
 
 
 class WeightedGNNConv(MolConv):
-    def __init__(self, in_channels: int, out_channels: int, aggr: str, bias: bool, **kwargs):
-        kwargs.setdefault('aggr', aggr)
-        super().__init__(**kwargs)
-
+    def __init__(self, in_channels: int, out_channels: int, aggr='add', bias=True):
+        super().__init__(aggr=aggr)
         self.in_channels = in_channels
         self.out_channels = out_channels
         self.lin = Linear(2 * in_channels, out_channels, bias=bias)
 
     def forward(self, x: Tensor, edge_index: Adj, edge_attr: OptTensor = None, edge_weight: OptTensor = None) -> Tensor:
-        # propagate_type: (x: Tensor, edge_weight: OptTensor)
-        out = self.propagate(edge_index, x=x, edge_weight=edge_weight, size=None, edge_attr=edge_attr)
+        out = self.propagate(edge_index, x=x, edge_attr=edge_attr, edge_weight=edge_weight)
         out = self.lin(torch.cat((x, out), dim=-1))
         return out
 
